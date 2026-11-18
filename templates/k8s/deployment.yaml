@@ -1,0 +1,42 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: studenthub
+  labels:
+    app: studenthub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: studenthub
+  template:
+    metadata:
+      labels:
+        app: studenthub
+    spec:
+      containers:
+        - name: studenthub
+          image: REPLACE_WITH_ECR_IMAGE_URI
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
